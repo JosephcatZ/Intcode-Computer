@@ -39,7 +39,10 @@ def parse(code,opcode,*params):
     elif opcode == "multi":
          code[params[2][0]] = refer(params[0],code) * refer(params[1],code)
     elif opcode == "Input":
-        code[params[0][0]] = input(">")
+        j = None
+        while j == None:
+            j = int(input("> "))
+            code[params[0][0]] = j
     elif opcode == "Output":
         print(refer(code,params[0]))
     elif opcode == "Halt":
@@ -47,7 +50,7 @@ def parse(code,opcode,*params):
     return(code)
 
 
-code =["11001","1","1","1","99"]
+code =['3','0','4','0','99']
 pos = 0
 targetPos = 0
 params = []
@@ -63,16 +66,18 @@ while pos < len(code):
             else:
                 break;
         targetPos = pos + intcodes[int(code[pos][len(code[pos])-2:len(code[pos])])]["params"]+1
-        print(targetPos)
         op = code[pos][0:len(code[pos])-2]
-        while len(op) < 3:
+        print(op)
+        while len(op) < targetPos-pos-1:
             op = "0"+op
         print(op)
         params = []
         for i in op:
             params.append([0,int(i)])
+        print(params)
         op = code[pos][len(code[pos])-2:len(code[pos])]
+        print(op)
 
     else:
-       params[intcodes[int(op)]["params"]-(targetPos-pos)][0] = int(i)
+       params[intcodes[int(op)]["params"]-(targetPos-pos)][0] = int(code[pos])
     pos+=1
