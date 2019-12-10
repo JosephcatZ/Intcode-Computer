@@ -27,21 +27,21 @@ intcodes = {
 }
 def refer(param,code):
     if param[1] == 1:
-        return(param[0])
+        return(int(param[0]))
     elif param[1] == 0:
-        return(code[param[0]])
+        return(int(code[param[0]]))
 
 def parse(code,opcode,*params):
     opcode = intcodes[opcode]["code"]
     if opcode == "add":
-        code[params[2][0]] = refer(params[0],code) + refer(params[1],code)
+        code[params[2][0]] = str(refer(params[0],code) + refer(params[1],code))
     elif opcode == "multi":
-         code[params[2][0]] = refer(params[0],code) * refer(params[1],code)
+         code[params[2][0]] = str(refer(params[0],code) * refer(params[1],code))
     elif opcode == "Input":
         j = None
         while j == None:
             j = int(input("> "))
-            code[params[0][0]] = j
+            code[params[0][0]] = str(j)
     elif opcode == "Output":
         print(refer(params[0],code))
     elif opcode == "Halt":
@@ -49,7 +49,11 @@ def parse(code,opcode,*params):
     return(code)
 
 
-code =['3','0','4','0','99']
+code =[]
+with open("input") as IN:
+    for j in IN:
+        for i in j.split("\n")[0].split(","):
+            code.append(i)
 pos = 0
 targetPos = 0
 params = []
