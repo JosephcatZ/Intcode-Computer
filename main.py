@@ -32,6 +32,7 @@ def refer(param,code):
         return(code[param[0]])
 
 def parse(code,opcode,*params):
+    print(params)
     opcode = intcodes[opcode]["code"]
     if opcode == "add":
         code[params[2][0]] = refer(params[0],code) + refer(params[1],code)
@@ -51,7 +52,7 @@ pos = 0
 targetPos = 0
 params = []
 op = ""
-while pos < len(code)-1:
+while pos < len(code):
     
     if pos - targetPos == 0:
         if pos != 0:
@@ -69,10 +70,9 @@ while pos < len(code)-1:
         print(op)
         params = []
         for i in op:
-            params.append([0,i])
+            params.append([0,int(i)])
         op = code[pos][len(code[pos])-2:len(code[pos])]
 
     else:
        params[intcodes[int(op)]["params"]-(targetPos-pos)][0] = int(i)
-
     pos+=1
