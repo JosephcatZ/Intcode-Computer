@@ -19,6 +19,26 @@ intcodes = {
         "code":"Output",
         "paramRef":["data"]
     },
+    5:{
+        "params":2,
+        "code":"Jump-If-True",
+        "ParamRef":["Bool","Line"]
+    },
+    6:{
+        "params":2,
+        "code":"Jump-If-False",
+        "ParamRef":["Bool","Line"]
+    },
+    7:{
+        "params":3,
+        "code":"less",
+        "ParamRef":["1","2","sto"]
+    },
+    8:{
+        "params":3,
+        "code":"equal",
+        "ParamRef":["1","2","sto"]
+    },
     99:{
         "params":0,
         "code":"Halt",
@@ -32,11 +52,29 @@ def refer(param,code):
         return(int(code[param[0]]))
 
 def parse(code,opcode,*params):
+    global pos
+    p = pos
     opcode = intcodes[opcode]["code"]
     if opcode == "add":
         code[params[2][0]] = str(refer(params[0],code) + refer(params[1],code))
     elif opcode == "multi":
          code[params[2][0]] = str(refer(params[0],code) * refer(params[1],code))
+    elif opcode == "less":
+        if refer(params[0],code) < refer(params[1],code):
+            code[params[2][0]] = "1"
+        else:
+            code[params[2][0]] = "0"
+    elif opcode == "equal":
+        if refer(params[0],code) == refer(params[1],code):
+            code[params[2][0]] = "1"
+        else:
+            code[params[2][0]] = "0"
+    elif opcode == "Jump-If-True":
+        if refer(params[0],code) == 1:
+            p = refer(params[1],code)
+    elif opcode == "Jump-If-False":
+        if refer(params[0],code) == 0:
+            p = refer(params[1],code)
     elif opcode == "Input":
         j = None
         while j == None:
@@ -46,11 +84,13 @@ def parse(code,opcode,*params):
         print(refer(params[0],code))
     elif opcode == "Halt":
         return(1)
+    #print(p)
+    pos = p
     return(code)
 
 
 code =[]
-with open("input") as IN:
+with open("test") as IN:
     for j in IN:
         for i in j.split("\n")[0].split(","):
             code.append(i)
@@ -59,11 +99,12 @@ targetPos = 0
 params = []
 op = ""
 while pos < len(code):
-    
     if pos - targetPos == 0:
         if pos != 0:
             if intcodes[int(op)]["params"] == 3:
-                code = parse(code,int(op),params[0],params[1],params[2])
+                code = parse(code,int(op),params[2],params[1],params[0])
+            elif intcodes[int(op)]["params"] == 2:
+                code = parse(code,int(op),params[1],params[0])
             elif intcodes[int(op)]["params"] == 1:
                 code = parse(code,int(op),params[0])
             else:
@@ -81,5 +122,5 @@ while pos < len(code):
 
 
     else:
-       params[intcodes[int(op)]["params"]-(targetPos-pos)][0] = int(code[pos])
+       params[(targetPos-pos)-1][0] = int(code[pos])
     pos+=1
