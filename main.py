@@ -84,21 +84,26 @@ def parse(code,opcode,*params):
         print(refer(params[0],code))
     elif opcode == "Halt":
         return(1)
-    #print(p)
+    if p!= pos:
+        print(code[p])
     pos = p
     return(code)
 
 
 code =[]
-with open("test") as IN:
+with open("input") as IN:
     for j in IN:
         for i in j.split("\n")[0].split(","):
             code.append(i)
+
 pos = 0
 targetPos = 0
 params = []
 op = ""
 while pos < len(code):
+    print(code[pos])
+    if not(code[245]=="1" and code[246]=="99999"):
+        print(pos,code[pos],code[245],code[246])
     if pos - targetPos == 0:
         if pos != 0:
             if intcodes[int(op)]["params"] == 3:
