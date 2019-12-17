@@ -141,6 +141,8 @@ def runCode():
     global params
     global op
     global flag
+    global Memory
+    Memory = 0
     pos = 0
     targetPos = 0
     params = []
